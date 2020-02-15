@@ -60,6 +60,17 @@ void main() async {
 This is just the start of the features of Pendulum. To see all the methods and triggers, 
 check out the API reference.
 
+## Simulated Tasks
+
+Testing Pendulum can be a pain if you're using Tasks with DateTime arguments, because you 
+have to wait for the DateTime to be reached to test. My solution to this problem is 
+SimulatedTask:
+
+- Simulated Task uses a provided DateTime instead of DateTime.now()
+- You can 'fast-forward' to any point in time that you want using setNow(DateTime arg)
+
+This is obviously an imperfect solution, and I'm welcome to suggestions as to alternatives.
+
 ## Partners in Crime
 
 While Pendulum works fine all on its own, there are some packages that can enhance its

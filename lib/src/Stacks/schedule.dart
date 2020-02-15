@@ -1,5 +1,8 @@
 import 'dart:math';
 
+/// Wrapper for a Function(List) with the corresponding List of arguments.
+///
+/// Processes the inner function in a variety of manners with a variety of triggers.
 class Task {
   Function(List) _inner;
   List _arguments;
@@ -17,6 +20,9 @@ class Task {
     yield _inner(_arguments);
   }
 
+  /// Not for external use, but this just returns the current date.
+  DateTime now() {return DateTime.now();}
+
   /// Executes [inner] after a delay and yields the result in a Stream.
   Stream processAfter(Duration delay) async* {
     final target =
@@ -32,10 +38,10 @@ class Task {
 
   /// Executes [inner] at the given time and yields the result in a Stream.
   Stream processAt(DateTime time) async* {
-    final target = time.difference(DateTime.now()).inMilliseconds;
-    var delta = target - DateTime.now().millisecondsSinceEpoch;
+    final target = time.difference(now()).inMilliseconds;
+    var delta = target - now().millisecondsSinceEpoch;
     while (delta > 0) {
-      delta = target - DateTime.now().millisecondsSinceEpoch;
+      delta = target - now().millisecondsSinceEpoch;
       await Future.delayed(Duration(milliseconds: pow(delta, 0.6).round()));
     }
     yield _inner(_arguments);
@@ -96,12 +102,12 @@ class Task {
     seconds ??= [];
     final start = DateTime.now();
     while (DateTime.now().difference(start) < length) {
-      var now = DateTime.now();
-      if (weekdays.contains(now.weekday) ||
-          dates.contains(now.day) ||
-          hours.contains(now.hour) ||
-          minutes.contains(now.minute) ||
-          seconds.contains(now.second)) yield _inner(_arguments);
+      var nowDate = now();
+      if (weekdays.contains(nowDate.weekday) ||
+          dates.contains(nowDate.day) ||
+          hours.contains(nowDate.hour) ||
+          minutes.contains(nowDate.minute) ||
+          seconds.contains(nowDate.second)) yield _inner(_arguments);
       await Future.delayed(interval);
     }
   }
@@ -113,8 +119,8 @@ class Task {
   Stream processOnWeekdays(Iterable<int> weekdays, Duration interval) async* {
     while (true) {
       var target = DateTime.now().add(interval);
-      if (weekdays.contains(DateTime.now().weekday)) yield _inner(_arguments);
-      await Future.delayed(target.difference(DateTime.now()));
+      if (weekdays.contains(now().weekday)) yield _inner(_arguments);
+      await Future.delayed(target.difference(now()));
     }
   }
 
@@ -123,8 +129,8 @@ class Task {
   Stream processOnDates(Iterable<int> dates, Duration interval) async* {
     while (true) {
       var target = DateTime.now().add(interval);
-      if (dates.contains(DateTime.now().day)) yield _inner(_arguments);
-      await Future.delayed(target.difference(DateTime.now()));
+      if (dates.contains(now().day)) yield _inner(_arguments);
+      await Future.delayed(target.difference(now()));
     }
   }
 
@@ -133,8 +139,8 @@ class Task {
   Stream processOnHours(Iterable<int> hours, Duration interval) async* {
     while (true) {
       var target = DateTime.now().add(interval);
-      if (hours.contains(DateTime.now().hour)) yield _inner(_arguments);
-      await Future.delayed(target.difference(DateTime.now()));
+      if (hours.contains(now().hour)) yield _inner(_arguments);
+      await Future.delayed(target.difference(now()));
     }
   }
 
@@ -143,8 +149,8 @@ class Task {
   Stream processOnMinutes(Iterable<int> minutes, Duration interval) async* {
     while (true) {
       var target = DateTime.now().add(interval);
-      if (minutes.contains(DateTime.now().minute)) yield _inner(_arguments);
-      await Future.delayed(target.difference(DateTime.now()));
+      if (minutes.contains(now().minute)) yield _inner(_arguments);
+      await Future.delayed(target.difference(now()));
     }
   }
 
@@ -153,8 +159,34 @@ class Task {
   Stream processOnSeconds(Iterable<int> seconds, Duration interval) async* {
     while (true) {
       var target = DateTime.now().add(interval);
-      if (seconds.contains(DateTime.now().second)) yield _inner(_arguments);
-      await Future.delayed(target.difference(DateTime.now()));
+      if (seconds.contains(now().second)) yield _inner(_arguments);
+      await Future.delayed(target.difference(now()));
     }
+  }
+}
+
+/// Child class of [Task] for testing purposes.
+///
+/// Allows you to set the DateTime that Task uses as "now".
+class SimulatedTask extends Task {
+  DateTime nowDT;
+
+  /// Set the DateTime that will be used as "now" by this Task's methods.
+  void setNow (DateTime simulated) {
+    nowDT = simulated;
+  }
+
+  /// Get the DateTime currently used as now.
+  @override
+  DateTime now() => nowDT;
+
+  /// Create a simulated task with a DateTime to use as now.
+  SimulatedTask (Function(List arguments) function, List arguments, DateTime sim) : super(function, arguments) {
+    nowDT = sim;
+  }
+
+  @override
+  void noSuchMethod(Invocation invocation) {
+    return super.noSuchMethod(invocation);
   }
 }
