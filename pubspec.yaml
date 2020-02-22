@@ -1,13 +1,14 @@
 name: pendulum
 description: A dynamic, Stream-based API for job scheduling in Dart, capable of processing on different triggers.
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/AKushWarrior/pendulum
 repository: https://github.com/AKushWarrior/pendulum
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
 
-# dependencies:
+dependencies:
+  path: ^1.6.4
 
 dev_dependencies:
   test: ^1.6.0

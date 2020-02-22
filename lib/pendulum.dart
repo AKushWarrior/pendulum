@@ -1,6 +1,4 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
+/// A dynamic, Stream-based API for job scheduling in Dart, capable of processing on different triggers.
 library pendulum;
 
-export 'src/Stacks/schedule.dart';
+export 'src/Stacks/tasks.dart';

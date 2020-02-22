@@ -1,3 +1,7 @@
+## 0.1.3 (beta)
+- Added Type arguments so that returned Streams can be type-identified
+- Changed example accordingly
+
 ## 0.1.2 (beta)
 - Added SimulatedTask class for easier testing
 

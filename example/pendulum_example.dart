@@ -1,13 +1,13 @@
 import 'package:pendulum/pendulum.dart';
 
 void main() async {
-  var task = Task((List x) {
+  var task = Task<String>((List args) {
     return 'Simple process!';
   }, []);
-  var task2 = Task((List x) {
+  var task2 = Task<String>((List args) {
     return 'Delayed process!';
   }, []);
-  var task3 = Task((List x) {
+  var task3 = Task<String>((List args) {
     return 'Repeated process!';
   }, []);
   var watch = Stopwatch();
